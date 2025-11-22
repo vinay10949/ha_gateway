@@ -128,16 +128,17 @@ impl UpstreamNode {
         match state.health_status {
             NodeCondition::Healthy => true,
             NodeCondition::Unhealthy => {
+                // Check if cooldown period has expired
                 if let Some(last_failure) = state.last_failure_time {
                     if Instant::now().duration_since(last_failure) >= COOLDOWN_DURATION {
                         tracing::info!(
-                            "Node {} cooldown period expired, ready for health check",
+                            "Node {} cooldown period expired, allowing retry",
                             self.config.name
                         );
-                        return false;
+                        return true;
                     }
                 }
-                return false;
+                false
             }
         }
     }

@@ -93,7 +93,6 @@ async fn handle_rpc_request(
 ) -> impl IntoResponse {
     tracing::info!("Received RPC request: method={}", request.method);
 
-    // Generate cache key for cacheable methods
     let cache_key = if request.method == "eth_blockNumber" {
         Some(format!(
             "{}:{}",
@@ -105,7 +104,9 @@ async fn handle_rpc_request(
     };
 
     if let Some(ref key) = cache_key {
+        tracing::info!("checking key in cache {:?}",cache_key);
         if let Some(cached_result) = state.cache.get(key) {
+            tracing::info!("Received cache result  {:?}",cached_result);
             return (
                 StatusCode::OK,
                 Json(RpcResponse::success(request.id.clone(), cached_result)),
