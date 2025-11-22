@@ -1,4 +1,5 @@
 mod cache;
+mod load_balancer;
 mod types;
 mod upstream;
 
