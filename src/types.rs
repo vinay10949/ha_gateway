@@ -1,28 +1,40 @@
 use serde::{Deserialize, Serialize};
 
+
+/// Eth client rpc request.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RpcRequest {
     pub jsonrpc: String,
+
+    /// Name of the RPC method to call (e.g., "eth_blockNumber").
     pub method: String,
+
     #[serde(default)]
     pub params: serde_json::Value,
+
     pub id: serde_json::Value,
 }
+
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RpcResponse {
     pub jsonrpc: String,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub result: Option<serde_json::Value>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<RpcError>,
+
     pub id: serde_json::Value,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RpcError {
     pub code: i32,
+
     pub message: String,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub data: Option<serde_json::Value>,
 }
